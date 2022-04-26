@@ -5,10 +5,10 @@ A module that turns a Bitmap into a raw png file.
 ```lua
 local Bitmap = {}
 
-for y = 1, 25 do
+for y = 1, 255 do
     Bitmap[y] = {}
-    for x = 1, 25 do
-        Bitmap[y][x] = {x * 10, y * 10, x * 10}
+    for x = 1, 255 do
+        Bitmap[y][x] = {x, y, math.sqrt(x * y)}
     end
 end
 

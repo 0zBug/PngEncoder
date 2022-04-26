@@ -1,12 +1,12 @@
 
-local function BitmapToPng(Bitmap, ColorMode)
-    local height, width = #Bitmap, #Bitmap[1]
+return function(Bitmap, ColorMode)
+    local Height, Width = #Bitmap, #Bitmap[1]
     local ColorMode = ColorMode or "rgb"
 
     local bytesPerPixel, HeaderType = ColorMode == "rgb" and 3 or 4, ColorMode == "rgb" and 2 or 6
 
-    local RowSize = width * bytesPerPixel + 1
-    local Remain = RowSize * height
+    local RowSize = Width * bytesPerPixel + 1
+    local Remain = RowSize * Height
     local iDat = (math.ceil(Remain / 0xFFFF) * 5 + 6) + Remain
 
     local Header = {
@@ -23,8 +23,8 @@ local function BitmapToPng(Bitmap, ColorMode)
         0x41, 0x54, 0x08, 0x1D
     }
 
-    for i = 0, 3 do Header[17 + i] = bit32.band(bit32.rshift(width, (3 - i) * 8), 0xFF) end
-    for i = 0, 3 do Header[21 + i] = bit32.band(bit32.rshift(height, (3 - i) * 8), 0xFF) end
+    for i = 0, 3 do Header[17 + i] = bit32.band(bit32.rshift(Width, (3 - i) * 8), 0xFF) end
+    for i = 0, 3 do Header[21 + i] = bit32.band(bit32.rshift(Height, (3 - i) * 8), 0xFF) end
     for i = 0, 3 do Header[34 + i] = bit32.band(bit32.rshift(iDat, (3 - i) * 8), 0xFF) end
 
     local CRC = 0xFFFFFFFF

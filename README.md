@@ -14,3 +14,6 @@ end
 
 writefile("output.png", BitmapToPng(Bitmap, "rgb"))
 ```
+
+# Output
+()[https://raw.githubusercontent.com/0zBug/PngEncoder/main/output.png]

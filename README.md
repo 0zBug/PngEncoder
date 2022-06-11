@@ -14,7 +14,7 @@ for y = 1, 255 do
     end
 end
 
-writefile("example.png", BitmapToPng(Bitmap, "rgb"))
+writefile("example.png", ArrayToPng(Bitmap, "rgb"))
 ```
 
 # Output

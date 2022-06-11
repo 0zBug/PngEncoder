@@ -37,12 +37,11 @@ return function(Bitmap, ColorMode)
 
     for i = 0, 3 do Header[30 + i] = bit32.band(bit32.rshift(bit32.bnot(CRC), (3 - i) * 8), 0xFF) end
     
-    local PNG = string.char(unpack(Header))
-
     local X, Y = 0, 0
     local Adler = 0
     local Deflate = 0
 
+    local Data = {string.char(unpack(Header))}
     for y, Section in pairs(Bitmap) do
         for x, Pixel in pairs(Section) do
             local Count = #Pixel
@@ -63,7 +62,7 @@ return function(Bitmap, ColorMode)
                         bit32.band(bit32.bxor(bit32.rshift(Size, 8), 0xFF), 0xFF),
                     }
 
-                    PNG = PNG .. string.char(unpack(Header))
+                    table.insert(Data, string.char(unpack(Header)))
 
                     CRC = bit32.bnot(CRC)
                     for i = 1, #Header do
@@ -75,7 +74,7 @@ return function(Bitmap, ColorMode)
                 end
 
                 if (X == 0) then
-                    PNG = PNG .. string.char(0)
+                    table.insert(Data, string.char(0))
 
                     CRC = bit32.bnot(CRC)
 
@@ -103,7 +102,7 @@ return function(Bitmap, ColorMode)
                     end
 
                     for i = Pointer, Pointer + n - 1 do
-                        PNG = PNG .. string.char(Pixel[i])
+                        table.insert(Data, string.char(math.clamp(math.floor(Pixel[i] + 0.5), 0, 255)))
                     end
 
                     CRC = bit32.bnot(CRC)
@@ -158,7 +157,7 @@ return function(Bitmap, ColorMode)
 
                         for i = 0, 3 do Footer[5 + i] = bit32.band(bit32.rshift(bit32.bnot(CRC), (3 - i) * 8), 0xFF) end
 
-                        PNG = PNG .. string.char(unpack(Footer))
+                        table.insert(Data, string.char(unpack(Footer)))
                     end
 
                     Y = Y + 1
@@ -167,5 +166,5 @@ return function(Bitmap, ColorMode)
         end
     end
 
-    return PNG
+    return table.concat(Data)
 end
